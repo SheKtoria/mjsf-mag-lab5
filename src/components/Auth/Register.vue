@@ -5,6 +5,7 @@
         <div class="card">
           <div class="card-body p-4">
             <form @submit.prevent="signUp">
+              <div v-if="!resendEmail">
               <h2>Register</h2>
               <div class="mb-2">
                 <input aria-required="true" type="text" placeholder="user name" required v-model="username">
@@ -19,10 +20,14 @@
                 <p class="text-danger">{{ error.text }}</p>
               </div>
               <button class="mt-3 mb-3">Sign Up</button>
-              <p class="fw-lighter" v-if="resendEmail" @click="resendVerificationEmail">Resend email verification</p>
               <p>Already have an account?
                 <router-link to="/login">Sign In</router-link>
               </p>
+              </div>
+              <div v-else>
+                <p class="text-success">Verification list was sent to your email. Please, verify your profile</p>
+                <p class="fw-lighter" v-if="resendEmail" @click="resendVerificationEmail">Resend email verification</p>
+              </div>
             </form>
           </div>
         </div>
@@ -72,11 +77,8 @@ export default {
     },
 
     verifyUser() {
-      const actionCodeSettings = {
-        url: `http://localhost:5173/todo?verified`,
-      };
+      const actionCodeSettings = {url: `http://localhost:5173/todo?verified`};
       sendEmailVerification(auth.currentUser, actionCodeSettings);
-      alert('Verification list was sent to your email. Please, verify your profile')
     }
   }
 }
